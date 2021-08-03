@@ -1,11 +1,22 @@
 package com.example.countrieslistapp.model;
 
+import com.example.countrieslistapp.di.DaggerApiComponent;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import io.reactivex.Single;
+
 public class CountriesService {
-    public final String BASE_URL = "https://raw.githubusercontent.com/";
 
     private static CountriesService instance;
 
+    @Inject
+    public CountriesApi api;
+    
     private CountriesService(){
+        DaggerApiComponent.create().inject(this);
     }
 
     public static CountriesService getInstance(){
@@ -13,5 +24,9 @@ public class CountriesService {
             instance = new CountriesService();
         }
         return instance;
+    }
+
+    public Single<List<CountryModel>> getCountries(){
+        return  api.getCountries();
     }
 }
